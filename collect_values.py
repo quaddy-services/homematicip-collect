@@ -63,21 +63,30 @@ def main():
         print("home.get_current_state()={}".format(home.get_current_state()))
         return
 
-    sortedDevices = sorted(home.devices, key=attrgetter("deviceType", "label"))
-    # print("sortedDevices={}".format(sortedDevices))
-    for d in sortedDevices:
-        if isinstance(d, TemperatureHumiditySensorWithoutDisplay):
-            print("humidity {},{},{}".format(d.label, d.actualTemperature, d.humidity))
-            f = open(d.label + ".csv", "a+")
-            f.write("{},{},{}\r\n".format(datetime.now(), d.actualTemperature, d.humidity))
+    sortedGroups = sorted(home.groups, key=attrgetter("groupType", "label"))
+    for g in sortedGroups:
+        print(g.label+":")
+        # first print Sensor
+        sensorDevices = []
+        heatingThermostats= [];
+        for d in g.devices:
+            if isinstance(d, TemperatureHumiditySensorWithoutDisplay):
+                # https://homematicip-rest-api.readthedocs.io/en/latest/homematicip.html#homematicip.device.TemperatureHumiditySensorWithoutDisplay
+                sensorDevices.append(d)
+            elif isinstance(d, HeatingThermostat):
+                heatingThermostats.append(d)
+        
+        if (len(heatingThermostats)>0):        
+            f = open(g.label + ".csv", "a+")
+            for d in sorted(sensorDevices):
+                print("  humidity {},{},{}".format(d.label, d.actualTemperature, d.humidity))
+                f.write("{},{},{}".format(datetime.now(), d.actualTemperature, d.humidity))
+            # Then all HeatingThermostat
+            for d in sorted(heatingThermostats):
+                print("  valvePosition {},{},{}".format(d.label, d.valveActualTemperature, d.valvePosition))
+                f.write(",{},{}".format(d.valveActualTemperature, d.valvePosition))
+            f.write("\n")
             f.close()
-        elif isinstance(d, HeatingThermostat):
-            print("valvePosition {},{},{}".format(d.label, d.valveActualTemperature, d.valvePosition))
-            f = open(d.label + ".csv", "a+")
-            f.write("{},{},{}\r\n".format(datetime.now(), d.valveActualTemperature, d.valvePosition))
-            f.close()
-        else:
-            print("{} {}".format(d.id, str(d)))
 
 
 def printEvents(eventList):
