@@ -86,8 +86,8 @@ def main():
                     f.write("{}\t{}\t{}".format(datetime.now(), locale.str(d.actualTemperature), locale.str(d.humidity)))
                 # Then all HeatingThermostat
                 for d in sorted(heatingThermostats):
-                    print("  valvePosition {} {} {}".format(d.label, locale.str(d.valveActualTemperature), locale.str(d.valvePosition)))
-                    f.write("\t{}\t{}".format(locale.str(d.valveActualTemperature), locale.str(d.valvePosition)))
+                    print("  valvePosition {} {} {}".format(d.label, locale.str(d.valveActualTemperature), locale.str(d.valvePosition*100)))
+                    f.write("\t{}\t{}".format(locale.str(d.valveActualTemperature), locale.str(d.valvePosition*100)))
                 f.write("\n")
                 f.close()
 
