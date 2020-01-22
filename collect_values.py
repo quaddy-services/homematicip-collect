@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import logging
 import sys
-import time
+import locale
 from datetime import datetime
 from argparse import ArgumentParser
 from collections import namedtuple
@@ -58,35 +58,38 @@ def main():
     home = Home()
     home.set_auth_token(_config.auth_token)
     home.init(_config.access_point)
-
+    
+    locale.setlocale(locale.LC_ALL, '')
+    
     if not home.get_current_state():
         print("home.get_current_state()={}".format(home.get_current_state()))
         return
 
     sortedGroups = sorted(home.groups, key=attrgetter("groupType", "label"))
     for g in sortedGroups:
-        print(g.label+":")
-        # first print Sensor
-        sensorDevices = []
-        heatingThermostats= [];
-        for d in g.devices:
-            if isinstance(d, TemperatureHumiditySensorWithoutDisplay):
-                # https://homematicip-rest-api.readthedocs.io/en/latest/homematicip.html#homematicip.device.TemperatureHumiditySensorWithoutDisplay
-                sensorDevices.append(d)
-            elif isinstance(d, HeatingThermostat):
-                heatingThermostats.append(d)
-        
-        if (len(heatingThermostats)>0):        
-            f = open(g.label + ".csv", "a+")
-            for d in sorted(sensorDevices):
-                print("  humidity {},{},{}".format(d.label, d.actualTemperature, d.humidity))
-                f.write("{},{},{}".format(datetime.now(), d.actualTemperature, d.humidity))
-            # Then all HeatingThermostat
-            for d in sorted(heatingThermostats):
-                print("  valvePosition {},{},{}".format(d.label, d.valveActualTemperature, d.valvePosition))
-                f.write(",{},{}".format(d.valveActualTemperature, d.valvePosition))
-            f.write("\n")
-            f.close()
+        print(type(g).__name__ +" "+g.label+":")
+        if (isinstance(g, HeatingGroup)):
+            # first print Sensor
+            sensorDevices = []
+            heatingThermostats= [];
+            for d in g.devices:
+                if isinstance(d, TemperatureHumiditySensorWithoutDisplay):
+                    # https://homematicip-rest-api.readthedocs.io/en/latest/homematicip.html#homematicip.device.TemperatureHumiditySensorWithoutDisplay
+                    sensorDevices.append(d)
+                elif isinstance(d, HeatingThermostat):
+                    heatingThermostats.append(d)
+            
+            if (len(heatingThermostats)>0):        
+                f = open(g.label + ".csv", "a+")
+                for d in sorted(sensorDevices):
+                    print("  humidity {} {} {}".format(d.label, locale.str(d.actualTemperature), locale.str(d.humidity)))
+                    f.write("{}\t{}\t{}".format(datetime.now(), locale.str(d.actualTemperature), locale.str(d.humidity)))
+                # Then all HeatingThermostat
+                for d in sorted(heatingThermostats):
+                    print("  valvePosition {} {} {}".format(d.label, locale.str(d.valveActualTemperature), locale.str(d.valvePosition)))
+                    f.write("\t{}\t{}".format(locale.str(d.valveActualTemperature), locale.str(d.valvePosition)))
+                f.write("\n")
+                f.close()
 
 
 def printEvents(eventList):
