@@ -2,6 +2,7 @@
 import logging
 import sys
 import locale
+import os.path
 from datetime import datetime
 from argparse import ArgumentParser
 from collections import namedtuple
@@ -79,15 +80,20 @@ def main():
                 elif isinstance(d, HeatingThermostat):
                     heatingThermostats.append(d)
             
-            if (len(heatingThermostats)>0):        
-                f = open(g.label + ".csv", "a+")
+            if (len(heatingThermostats)>0):
+                fileName = g.label + ".csv"
+                if os.path.isfile(fileName):
+                    f = open(fileName, "a+")
+                else:
+                    f = open(fileName, "a+")
+                    f.write("date\ttemp\thumidity\tvalve\n")
                 for d in sorted(sensorDevices):
                     print("  humidity {} {} {}".format(d.label, locale.str(d.actualTemperature), locale.str(d.humidity)))
                     f.write("{}\t{}\t{}".format(datetime.now(), locale.str(d.actualTemperature), locale.str(d.humidity)))
                 # Then all HeatingThermostat
                 for d in sorted(heatingThermostats):
-                    print("  valvePosition {} {} {}".format(d.label, locale.str(d.valveActualTemperature), locale.str(d.valvePosition*100)))
-                    f.write("\t{}\t{}".format(locale.str(d.valveActualTemperature), locale.str(d.valvePosition*100)))
+                    print("  valvePosition {} {}".format(d.label, locale.str(d.valvePosition*100)))
+                    f.write("\t{}".format( locale.str(d.valvePosition*100)))
                 f.write("\n")
                 f.close()
 
