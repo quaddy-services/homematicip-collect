@@ -35,4 +35,4 @@ and for each Heating-Group a .csv file (tab-seperated) will be created containin
 
 Diagram created via Excel:
 
-(https://raw.githubusercontent.com/quaddy-services/homematicip-collect/master/example/2020-01-26%2016_37_15-Heizungswerte.xlsx%20-%20Excel.png)
+<https://raw.githubusercontent.com/quaddy-services/homematicip-collect/master/example/2020-01-26%2016_37_15-Heizungswerte.xlsx%20-%20Excel.png>
