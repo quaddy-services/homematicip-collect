@@ -25,8 +25,14 @@ and for each Heating-Group a .csv file (tab-seperated) will be created containin
 * * Requested temperature
 * * Valve Position
 
+# Example
+
 | date | actual	| humidity	| set	| valve |
 | ---- | ------ | --------- | --- | ----- |
 | 2020-01-23 07:54:08.930493	| 20,2	| 47	| 19	| 0 |
 | 2020-01-23 07:59:08.451699	| 20,2	| 47	| 19	| 0 |
 | 2020-01-23 08:04:08.652793	| 20,2	| 47	| 21,5	| 51 |
+
+Diagram created via Excel:
+
+!(https://raw.githubusercontent.com/quaddy-services/homematicip-collect/master/example/2020-01-26%2016_37_15-Heizungswerte.xlsx%20-%20Excel.png)
