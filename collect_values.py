@@ -86,14 +86,14 @@ def main():
                     f = open(fileName, "a+")
                 else:
                     f = open(fileName, "a+")
-                    f.write("date\ttemp\thumidity\tvalve\n")
+                    f.write("date\tactual\thumidity\tset\tvalve\n")
                 for d in sorted(sensorDevices):
                     print("  humidity {} {} {}".format(d.label, locale.str(d.actualTemperature), locale.str(d.humidity)))
                     f.write("{}\t{}\t{}".format(datetime.now(), locale.str(d.actualTemperature), locale.str(d.humidity)))
                 # Then all HeatingThermostat
                 for d in sorted(heatingThermostats):
-                    print("  valvePosition {} {}".format(d.label, locale.str(d.valvePosition*100)))
-                    f.write("\t{}".format( locale.str(d.valvePosition*100)))
+                    print("  valvePosition {} {} {}".format(d.label, locale.str(d.setPointTemperature), locale.str(d.valvePosition*100)))
+                    f.write("\t{}\t{}".format(locale.str(d.setPointTemperature),  locale.str(d.valvePosition*100)))
                 f.write("\n")
                 f.close()
 
