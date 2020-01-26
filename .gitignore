@@ -96,7 +96,7 @@ ENV/
 /MANIFEST
 
 # CSV
-*.csv
+/*.csv
 
 /Backup
 
