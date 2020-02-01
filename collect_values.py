@@ -104,14 +104,15 @@ def main():
         f = open(fileName, "a+")
     else:
         f = open(fileName, "a+")
+        f.write("date")
         for d in sortedDevices:
-            f.write("date")
             if isinstance(d, HeatingThermostat):
                 f.write("\t{}".format(d.label))
-            f.write("\n")
+        f.write("\n")
     f.write("{}".format(datetime.now()))
     for d in sortedDevices:
-        f.write("\t{}".format(locale.str(locale.str(d.valvePosition*100))))
+        if isinstance(d, HeatingThermostat):
+            f.write("\t{}".format(locale.str(locale.str(d.valvePosition*100))))
     f.write("\n")
     f.close()
 
