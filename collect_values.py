@@ -112,7 +112,7 @@ def main():
     f.write("{}".format(datetime.now()))
     for d in sortedDevices:
         if isinstance(d, HeatingThermostat):
-            f.write("\t{}".format(locale.str(locale.str(d.valvePosition*100))))
+            f.write("\t{}".format(locale.str(d.valvePosition*100)))
     f.write("\n")
     f.close()
 
