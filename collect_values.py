@@ -97,6 +97,24 @@ def main():
                 f.write("\n")
                 f.close()
 
+    # print all valve positions in one file
+    sortedDevices = sorted(home.devices, key=attrgetter("deviceType", "label"))
+    fileName = "valvePositions.csv"
+    if os.path.isfile(fileName):
+        f = open(fileName, "a+")
+    else:
+        f = open(fileName, "a+")
+        for d in sortedDevices:
+            f.write("date")
+            if isinstance(d, HeatingThermostat):
+                f.write("\t{}".format(d.label))
+            f.write("\n")
+    f.write("{}".format(datetime.now()))
+    for d in sortedDevices:
+        f.write("\t{}".format(locale.str(locale.str(d.valvePosition*100))))
+    f.write("\n")
+    f.close()
+
 
 def printEvents(eventList):
     for event in eventList:
