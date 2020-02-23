@@ -68,9 +68,10 @@ def main():
 
     sortedGroups = sorted(home.groups, key=attrgetter("groupType", "label"))
     for g in sortedGroups:
-        print(type(g).__name__ +" "+g.label+":")
+        # print(type(g).__name__ +" "+g.label+":")
         if (isinstance(g, HeatingGroup)):
             # first print Sensor
+            print("HeatingGroup "+g.label+":")
             sensorDevices = []
             heatingThermostats= [];
             plugableSwitchMeasurings=[];
