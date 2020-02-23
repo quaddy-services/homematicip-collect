@@ -90,7 +90,7 @@ def main():
                     f = open(fileName, "a+")
                 else:
                     f = open(fileName, "a+")
-                    f.write("date\tactual\thumidity\tset\tvalve")
+                    f.write("date\tactual\thumidity")
                     for d in heatingThermostats:
                         f.write("\tset\tvalve")
                     for d in plugableSwitchMeasurings:
