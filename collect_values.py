@@ -73,20 +73,28 @@ def main():
             # first print Sensor
             sensorDevices = []
             heatingThermostats= [];
+            plugableSwitchMeasurings=[];
             for d in g.devices:
                 if isinstance(d, TemperatureHumiditySensorWithoutDisplay):
                     # https://homematicip-rest-api.readthedocs.io/en/latest/homematicip.html#homematicip.device.TemperatureHumiditySensorWithoutDisplay
                     sensorDevices.append(d)
                 elif isinstance(d, HeatingThermostat):
                     heatingThermostats.append(d)
+                elif isinstance(d,PlugableSwitchMeasuring):
+                    plugableSwitchMeasurings.append(d)
             
-            if (len(heatingThermostats)>0):
+            if (len(heatingThermostats)>0 or len(plugableSwitchMeasurings)>0):
                 fileName = g.label + ".csv"
                 if os.path.isfile(fileName):
                     f = open(fileName, "a+")
                 else:
                     f = open(fileName, "a+")
                     f.write("date\tactual\thumidity\tset\tvalve\n")
+                    for d in heatingThermostats:
+                        f.write("\tset\tvalve")
+                    for d in plugableSwitchMeasurings:
+                        f.write("\tsum\tcurrent")
+                    f.write("\n")
                 for d in sorted(sensorDevices):
                     print("  humidity {} {} {}".format(d.label, locale.str(d.actualTemperature), locale.str(d.humidity)))
                     f.write("{}\t{}\t{}".format(datetime.now(), locale.str(d.actualTemperature), locale.str(d.humidity)))
@@ -94,6 +102,10 @@ def main():
                 for d in sorted(heatingThermostats):
                     print("  valvePosition {} {} {}".format(d.label, locale.str(d.setPointTemperature), locale.str(d.valvePosition*100)))
                     f.write("\t{}\t{}".format(locale.str(d.setPointTemperature),  locale.str(d.valvePosition*100)))
+                # Then all PlugableSwitchMeasuring
+                for d in sorted(plugableSwitchMeasurings):
+                    print("  energy {} {} {}".format(d.label, locale.str(d.energyCounter),  locale.str(d.currentPowerConsumption)))
+                    f.write("\t{}\t{}".format(locale.str(d.energyCounter),  locale.str(d.currentPowerConsumption)))
                 f.write("\n")
                 f.close()
 
