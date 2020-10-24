@@ -105,8 +105,11 @@ def main():
                     f.write("\t{}\t{}".format(locale.str(d.setPointTemperature),  locale.str(d.valvePosition*100)))
                 # Then all PlugableSwitchMeasuring
                 for d in sorted(plugableSwitchMeasurings):
-                    print("  energy {} {} {}".format(d.label, locale.str(d.energyCounter),  locale.str(d.currentPowerConsumption)))
-                    f.write("\t{}\t{}".format(locale.str(d.energyCounter),  locale.str(d.currentPowerConsumption)))
+                    if (d.energyCounter is None or d.currentPowerConsumption is None):
+                        print(d)
+                    else:
+                        print("  energy {} {} {}".format(d.label, locale.str(d.energyCounter),  locale.str(d.currentPowerConsumption)))
+                        f.write("\t{}\t{}".format(locale.str(d.energyCounter),  locale.str(d.currentPowerConsumption)))
                 f.write("\n")
                 f.close()
 
